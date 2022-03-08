@@ -1,33 +1,30 @@
-const mongoose = require('mongoose')
-const {Schema} = mongoose;
-
-const characterSchema = new Schema({
-    name:{
-        type:String,
-        required:[true, 'Your character needs a name']
-    },
-    height:{
-        type:Number,
-        required:[true, 'You can change this later, I just need this to initialize things in the background']
-    },
-    age:{
-        type:Number,
-        min: [0, "Can't go lower than that"]
-    },
-    pronouns:{
-        type:String,
-        validate:{
-            validator: function(string) {
-                return /[a-z][A-Z]/.test(string)
+"use strict";
+Object.defineProperty(exports, "__esModule", { value: true });
+exports.Character = void 0;
+const mongoose_1 = require("mongoose");
+const infoSchema_1 = require("./infoSchema");
+const personnalitySchema_1 = require("./personnalitySchema");
+const faceSchema_1 = require("./faceSchema");
+const expressionSchema_1 = require("./expressionSchema");
+const characterSchema = new mongoose_1.Schema({
+    default: {
+        body: {
+            type: String,
+            validate: {
+                validator: (v) => {
+                    return /\w+(.webp)/g.test(v);
+                }
             },
-            message: props => 'Please use only letters.'
-        }
+            required: [true, "A body image must be uploaded"]
+        },
+        infos: infoSchema_1.infoSchema,
+        about: {
+            type: String,
+        },
+        personnality: personnalitySchema_1.personnalitySchema,
+        face: faceSchema_1.faceSchema,
+        expressions: expressionSchema_1.expressionSchema,
     }
-    // face :
-    //   - head shape
-         
-})
-
-const Character = mongoose.model('Character', characterSchema)
-
-module.exports = Character
+});
+exports.Character = (0, mongoose_1.model)('Character', characterSchema);
+//# sourceMappingURL=Character.js.map

@@ -5,6 +5,7 @@ import {infoSchema} from './infoSchema'
 import {personnalitySchema} from './personnalitySchema'
 import {faceSchema} from './faceSchema'
 import {expressionSchema} from './expressionSchema'
+// TODO: typescriptise this : Add an interface and assign this interface to the schema
 
 const characterSchema = new Schema({
   //  Since we handle AUs, we want to put the general stuff in a "default"
@@ -16,7 +17,7 @@ const characterSchema = new Schema({
             return /\w+(.webp)/g.test(v)
           }
         },
-        required:[true,"A body image must be uploaded"]
+        required:[true,"A body image must be uploaded "]
       },
       // Name, pronouns, age, height, Species
       infos:infoSchema,

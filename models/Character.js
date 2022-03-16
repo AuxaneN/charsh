@@ -15,7 +15,7 @@ const characterSchema = new mongoose_1.Schema({
                     return /\w+(.webp)/g.test(v);
                 }
             },
-            required: [true, "A body image must be uploaded"]
+            required: [true, "A body image must be uploaded "]
         },
         infos: infoSchema_1.infoSchema,
         about: {

@@ -11,4 +11,6 @@ router.route('/:id/spiceitup').put(uploadImages)
 
 router.route('/:id').get(getOneCharacter)
 router.route('/:id').put(updateOneCharacter)
+
+
 module.exports = router

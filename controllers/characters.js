@@ -24,7 +24,7 @@ exports.createCharacter = (0, async_1.asyncWrapper)((_req, _res) => __awaiter(vo
     return _res.status(200).json(character);
 }));
 exports.uploadImages = (0, async_1.asyncWrapper)((_req, _res) => __awaiter(void 0, void 0, void 0, function* () {
-    const { id } = _req.params;
+    const { id, version } = _req.params;
     const { bodyPart } = _req.body;
     if (!_req.files) {
         _res.send({
@@ -42,8 +42,9 @@ exports.uploadImages = (0, async_1.asyncWrapper)((_req, _res) => __awaiter(void 
                 yield file.mv(path + imageName);
                 const compressedImageName = yield (0, imageUtils_1.convertToWebp)(path, imageName);
                 console.log(compressedImageName);
-                character.default.body = compressedImageName;
-                console.log(character);
+                let value = character.data.get(version);
+                value.body = compressedImageName;
+                character.data.set(version, Object.assign({}, value));
                 yield character.save();
                 break;
             case 'expression':
@@ -53,14 +54,16 @@ exports.uploadImages = (0, async_1.asyncWrapper)((_req, _res) => __awaiter(void 
                     let imageName = image.name;
                     yield image.mv(path + `${expression}/` + imageName);
                     const compressedImageName = yield (0, imageUtils_1.convertToWebp)(path + `${expression}/`, imageName);
-                    character.default.expressions[expression] = compressedImageName;
+                    let value = character.data.get(version);
+                    value.expressions[expression] = compressedImageName;
+                    character.data.set(version, value);
                 }
                 yield character.save();
                 break;
         }
         return _res.status(200).json({ msg: "Images uploaded !" });
     }
-    return _res.status(500).send(`Something went wrong`);
+    return _res.status(500).json({ msg: `Something went wrong` });
 }));
 exports.getOneCharacter = (0, async_1.asyncWrapper)((_req, _res) => __awaiter(void 0, void 0, void 0, function* () {
     const id = _req.params.id;
@@ -68,6 +71,19 @@ exports.getOneCharacter = (0, async_1.asyncWrapper)((_req, _res) => __awaiter(vo
     return _res.status(200).json(character);
 }));
 exports.updateOneCharacter = (0, async_1.asyncWrapper)((_req, _res) => __awaiter(void 0, void 0, void 0, function* () {
-    _res.send(`updateOneCharacter with id of ${_req.params.id}`);
+    try {
+        const { id, version } = _req.params;
+        let character = yield Character_1.Character.findById(id);
+        if (character == null) {
+            return _res.status(500).json({ msg: `No character was found with this ID` });
+        }
+        character.data.set(version, _req.body);
+        console.log(character.data);
+        yield character.save();
+        return _res.status(200).json(character);
+    }
+    catch (error) {
+        return _res.status(500).json({ msg: `Something went wrong please try again another time` });
+    }
 }));
 //# sourceMappingURL=characters.js.map

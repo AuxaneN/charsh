@@ -7,10 +7,10 @@ import {getAllCharacters, getOneCharacter, updateOneCharacter, createCharacter,u
 router.route('/').get(getAllCharacters)
 router.route('/').post(createCharacter)
 
-router.route('/:id/spiceitup').put(uploadImages)
+router.route('/:id/:version/spiceitup').put(uploadImages)
 
 router.route('/:id').get(getOneCharacter)
-router.route('/:id').put(updateOneCharacter)
+router.route('/:id/:version').put(updateOneCharacter)
 
 
 module.exports = router

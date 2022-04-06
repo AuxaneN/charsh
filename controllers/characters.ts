@@ -8,6 +8,8 @@ import {convertToWebp} from '../utils/imageUtils'
 
 import * as fileUpload from 'express-fileupload'
 
+
+
 export const getAllCharacters = asyncWrapper(async (_req:Request,_res:Response) => {
     const character = await Character.find({})
     console.log(character)
@@ -16,7 +18,6 @@ export const getAllCharacters = asyncWrapper(async (_req:Request,_res:Response) 
 })
 
 export const createCharacter = asyncWrapper(async (_req:Request, _res:Response) => {
-    // const {name, height, age, pronouns} = _req.body
     let character = new Character(_req.body)
     await character.save()
 
@@ -24,7 +25,7 @@ export const createCharacter = asyncWrapper(async (_req:Request, _res:Response) 
 })
 
 export const uploadImages = asyncWrapper( async  (_req:Request,_res:Response) =>{
-      const {id} = _req.params
+      const {id,version} = _req.params
       const {bodyPart} = _req.body
 
       if(!_req.files) {
@@ -46,9 +47,11 @@ export const uploadImages = asyncWrapper( async  (_req:Request,_res:Response) =>
 
             const compressedImageName = await convertToWebp(path, imageName)
             console.log(compressedImageName)
-            // The body doesn't save as planned
-            character.default.body = compressedImageName
-            console.log(character)
+            let value = character.data.get(version)
+            value.body = compressedImageName
+
+            character.data.set(version,{...value})
+
             await character.save()
 
           break;
@@ -61,16 +64,16 @@ export const uploadImages = asyncWrapper( async  (_req:Request,_res:Response) =>
                   let imageName = image.name
                   await image.mv(path +`${expression}/`+ imageName)
                   const compressedImageName = await convertToWebp(path +`${expression}/`, imageName)
-
-                  character.default.expressions[expression] = compressedImageName
+                  let value = character.data.get(version)
+                  value.expressions[expression] = compressedImageName
+                  character.data.set(version, value)
               }
-
               await character.save()
           break;
         }
         return _res.status(200).json({msg:"Images uploaded !"})
       }
-      return _res.status(500).send(`Something went wrong`)
+      return _res.status(500).json({msg:`Something went wrong`})
   }
 )
 
@@ -81,5 +84,22 @@ export const getOneCharacter =  asyncWrapper(async (_req:Request,_res:Response) 
 })
 
 export const updateOneCharacter = asyncWrapper(async (_req:Request,_res:Response) =>{
-    _res.send(`updateOneCharacter with id of ${_req.params.id}`)
+  try {
+    const {id, version} = _req.params
+    // Find the character with the id
+    let character = await Character.findById(id)
+    if(character == null){
+      return _res.status(500).json({msg:`No character was found with this ID`})
+    }
+    // Update based on body or just throw everything in there
+    // The Map object lets us use the .get or .set methods to replace things, it's pretty dope
+    character.data.set(version, _req.body)
+    console.log(character.data)
+
+    await character.save()
+
+    return _res.status(200).json(character)
+  } catch (error) {
+    return _res.status(500).json({msg:`Something went wrong please try again another time`})
+  }
 })

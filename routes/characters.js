@@ -28,8 +28,8 @@ const router = express.Router();
 const characters_1 = require("../controllers/characters");
 router.route('/').get(characters_1.getAllCharacters);
 router.route('/').post(characters_1.createCharacter);
-router.route('/:id/spiceitup').put(characters_1.uploadImages);
+router.route('/:id/:version/spiceitup').put(characters_1.uploadImages);
 router.route('/:id').get(characters_1.getOneCharacter);
-router.route('/:id').put(characters_1.updateOneCharacter);
+router.route('/:id/:version').put(characters_1.updateOneCharacter);
 module.exports = router;
 //# sourceMappingURL=characters.js.map

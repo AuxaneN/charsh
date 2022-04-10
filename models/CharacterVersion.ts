@@ -29,4 +29,6 @@ export const characterVersionSchema = new Schema({
       face:faceSchema,
       // Happy, neutral, surprised, sad, scared, fucking horny man > 6 image urls
       expressions: expressionSchema,
+      // world: Types.ObjectId
+      // relationships : type: map, of array
 })

@@ -9,7 +9,7 @@ var __awaiter = (this && this.__awaiter) || function (thisArg, _arguments, P, ge
     });
 };
 Object.defineProperty(exports, "__esModule", { value: true });
-exports.updateOneCharacter = exports.getOneCharacter = exports.uploadImages = exports.createCharacter = exports.getAllCharacters = void 0;
+exports.deleteCharacter = exports.uploadImages = exports.updateOneCharacter = exports.getOneCharacter = exports.createCharacter = exports.getAllCharacters = void 0;
 const async_1 = require("../middleware/async");
 const Character_1 = require("../models/Character");
 const imageUtils_1 = require("../utils/imageUtils");
@@ -22,6 +22,27 @@ exports.createCharacter = (0, async_1.asyncWrapper)((_req, _res) => __awaiter(vo
     let character = new Character_1.Character(_req.body);
     yield character.save();
     return _res.status(200).json(character);
+}));
+exports.getOneCharacter = (0, async_1.asyncWrapper)((_req, _res) => __awaiter(void 0, void 0, void 0, function* () {
+    const id = _req.params.id;
+    const character = yield Character_1.Character.findById(id);
+    return _res.status(200).json(character);
+}));
+exports.updateOneCharacter = (0, async_1.asyncWrapper)((_req, _res) => __awaiter(void 0, void 0, void 0, function* () {
+    try {
+        const { id, version } = _req.params;
+        let character = yield Character_1.Character.findById(id);
+        if (character == null) {
+            return _res.status(500).json({ msg: `No character was found with this ID` });
+        }
+        character.data.set(version, _req.body);
+        console.log(character.data);
+        yield character.save();
+        return _res.status(200).json(character);
+    }
+    catch (error) {
+        return _res.status(500).json({ msg: `Something went wrong please try again another time` });
+    }
 }));
 exports.uploadImages = (0, async_1.asyncWrapper)((_req, _res) => __awaiter(void 0, void 0, void 0, function* () {
     const { id, version } = _req.params;
@@ -65,25 +86,9 @@ exports.uploadImages = (0, async_1.asyncWrapper)((_req, _res) => __awaiter(void 
     }
     return _res.status(500).json({ msg: `Something went wrong` });
 }));
-exports.getOneCharacter = (0, async_1.asyncWrapper)((_req, _res) => __awaiter(void 0, void 0, void 0, function* () {
-    const id = _req.params.id;
-    const character = yield Character_1.Character.findById(id);
-    return _res.status(200).json(character);
-}));
-exports.updateOneCharacter = (0, async_1.asyncWrapper)((_req, _res) => __awaiter(void 0, void 0, void 0, function* () {
-    try {
-        const { id, version } = _req.params;
-        let character = yield Character_1.Character.findById(id);
-        if (character == null) {
-            return _res.status(500).json({ msg: `No character was found with this ID` });
-        }
-        character.data.set(version, _req.body);
-        console.log(character.data);
-        yield character.save();
-        return _res.status(200).json(character);
-    }
-    catch (error) {
-        return _res.status(500).json({ msg: `Something went wrong please try again another time` });
-    }
+exports.deleteCharacter = (0, async_1.asyncWrapper)((_req, _res) => __awaiter(void 0, void 0, void 0, function* () {
+    const { id } = _req.params;
+    yield Character_1.Character.deleteOne({ id });
+    return _res.status(200).json({ msg: "Character successfuly deleted" });
 }));
 //# sourceMappingURL=characters.js.map

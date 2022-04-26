@@ -1,5 +1,7 @@
 import * as express from "express";
 const router = express.Router()
+import * as connectEnsureLogin from 'connect-ensure-login'
+import * as passport from 'passport'
 
 // import functions from controllers
 import {getAllCharacters, getOneCharacter, updateOneCharacter, createCharacter,uploadImages,deleteCharacter} from '../controllers/characters'

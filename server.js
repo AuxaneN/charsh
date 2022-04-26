@@ -37,24 +37,28 @@ var __importDefault = (this && this.__importDefault) || function (mod) {
 Object.defineProperty(exports, "__esModule", { value: true });
 const express_1 = __importDefault(require("express"));
 const config_1 = __importDefault(require("config"));
-const body_parser_1 = __importDefault(require("body-parser"));
 const cors_1 = __importDefault(require("cors"));
 const express_fileupload_1 = __importDefault(require("express-fileupload"));
+const passport_1 = __importDefault(require("passport"));
 const morgan = __importStar(require("morgan"));
 const utils_1 = require("./db/utils");
 const errorHandler_1 = require("./middleware/errorHandler");
 const port = config_1.default.get("port");
 const characterRoutes = require('./routes/characters');
+const userRoutes = require('./routes/user');
 const app = (0, express_1.default)();
 app.use((0, cors_1.default)());
-app.use(body_parser_1.default.json());
-app.use(body_parser_1.default.urlencoded({ extended: true }));
+app.use(express_1.default.json());
+app.use(express_1.default.urlencoded({ extended: true }));
 app.use((0, express_fileupload_1.default)({
     createParentPath: true
 }));
 app.use(errorHandler_1.errorHandler);
 app.use(morgan.default('dev'));
+app.use(passport_1.default.initialize());
+app.use(passport_1.default.session());
 app.use('/api/v1/characters', characterRoutes);
+app.use('/api/v1/user', userRoutes);
 app.all('/*', (_req, _res, next) => {
     const err = (0, errorHandler_1.createCustomError)("URL doesn't exist", 404);
     next(err);

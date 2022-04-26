@@ -1,6 +1,5 @@
 import {Schema, model, Types} from 'mongoose'
 
-
 const userSchema = new Schema({
   email:{
     type:String,
@@ -16,5 +15,9 @@ const userSchema = new Schema({
     min:[8, "Password must be minimum 8 characters long."]
   },
   characters: [Types.ObjectId]
-})
-export const User = model('User', userSchema)
+});
+
+
+const User = model('User', userSchema);
+
+export default User;

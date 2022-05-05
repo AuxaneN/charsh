@@ -11,11 +11,20 @@ const userSchema = new mongoose_1.Schema({
             message: () => `Incorrect email`
         },
     },
+    username: {
+        type: String,
+        required: true
+    },
     password: {
         type: String,
         min: [8, "Password must be minimum 8 characters long."]
     },
-    characters: [mongoose_1.Types.ObjectId]
+    characters: [mongoose_1.Types.ObjectId],
+    role: {
+        type: String,
+        enum: ["user", "admin", "moderator"],
+        default: "user"
+    }
 });
 const User = (0, mongoose_1.model)('User', userSchema);
 exports.default = User;

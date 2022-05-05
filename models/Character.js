@@ -7,6 +7,10 @@ const characterSchema = new mongoose_1.Schema({
     data: {
         type: Map,
         of: CharacterVersion_1.characterVersionSchema
+    },
+    isPublic: {
+        type: Boolean,
+        default: true
     }
 });
 exports.Character = (0, mongoose_1.model)('Character', characterSchema);

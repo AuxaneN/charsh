@@ -8,10 +8,14 @@ var __awaiter = (this && this.__awaiter) || function (thisArg, _arguments, P, ge
         step((generator = generator.apply(thisArg, _arguments || [])).next());
     });
 };
+var __importDefault = (this && this.__importDefault) || function (mod) {
+    return (mod && mod.__esModule) ? mod : { "default": mod };
+};
 Object.defineProperty(exports, "__esModule", { value: true });
 exports.deleteCharacter = exports.uploadImages = exports.updateOneCharacter = exports.getOneCharacter = exports.createCharacter = exports.getAllCharacters = void 0;
 const async_1 = require("../middleware/async");
 const Character_1 = require("../models/Character");
+const User_1 = __importDefault(require("../models/User"));
 const imageUtils_1 = require("../utils/imageUtils");
 exports.getAllCharacters = (0, async_1.asyncWrapper)((_req, _res) => __awaiter(void 0, void 0, void 0, function* () {
     const character = yield Character_1.Character.find({});
@@ -21,6 +25,10 @@ exports.getAllCharacters = (0, async_1.asyncWrapper)((_req, _res) => __awaiter(v
 exports.createCharacter = (0, async_1.asyncWrapper)((_req, _res) => __awaiter(void 0, void 0, void 0, function* () {
     let character = new Character_1.Character(_req.body);
     yield character.save();
+    const userId = _req.user._id;
+    const user = yield User_1.default.findOne({ _id: userId });
+    user.characters.push(character._id);
+    user.save();
     return _res.status(200).json(character);
 }));
 exports.getOneCharacter = (0, async_1.asyncWrapper)((_req, _res) => __awaiter(void 0, void 0, void 0, function* () {

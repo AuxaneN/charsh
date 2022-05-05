@@ -14,6 +14,8 @@ const port:number = config.get("port")
 
 const characterRoutes = require('./routes/characters')
 const userRoutes = require('./routes/user')
+const adminRoutes = require('./routes/admin')
+
 
 const app: Application = express()
 
@@ -31,12 +33,12 @@ app.use(morgan.default('dev'))
 
 // Auth setup
 app.use(passport.initialize());
-app.use(passport.session());
-
 
 // // Routes
 app.use('/api/v1/characters', characterRoutes)
 app.use('/api/v1/user', userRoutes)
+app.use('/api/v1/admin', adminRoutes)
+
 
 
 // // Error handling

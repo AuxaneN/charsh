@@ -29,14 +29,13 @@ Object.defineProperty(exports, "__esModule", { value: true });
 const express = __importStar(require("express"));
 const router = express.Router();
 const passport_1 = __importDefault(require("passport"));
+require('../utils/passport')(passport_1.default);
+const isAdmin = require('../middleware/isAdmin');
 const user_1 = require("../controllers/user");
-router.route('/').get(user_1.userInfo);
-router.route('/login').post((_req, _res, _next) => {
-    passport_1.default.authenticate('local', {
-        failureRedirect: '/login',
-        successRedirect: '/characters',
-    });
-}, user_1.login);
+router.route('/login').post(user_1.login);
 router.route('/register').post(user_1.register);
+router.post('/register-admin', isAdmin, user_1.registerAdmin);
+router.post('/oops', [passport_1.default.authenticate('jwt', { session: false }), isAdmin], user_1.deleteUser);
+router.get('/account-information', passport_1.default.authenticate('jwt', { session: false }), user_1.userInfo);
 module.exports = router;
 //# sourceMappingURL=user.js.map

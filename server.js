@@ -46,6 +46,7 @@ const errorHandler_1 = require("./middleware/errorHandler");
 const port = config_1.default.get("port");
 const characterRoutes = require('./routes/characters');
 const userRoutes = require('./routes/user');
+const adminRoutes = require('./routes/admin');
 const app = (0, express_1.default)();
 app.use((0, cors_1.default)());
 app.use(express_1.default.json());
@@ -56,9 +57,9 @@ app.use((0, express_fileupload_1.default)({
 app.use(errorHandler_1.errorHandler);
 app.use(morgan.default('dev'));
 app.use(passport_1.default.initialize());
-app.use(passport_1.default.session());
 app.use('/api/v1/characters', characterRoutes);
 app.use('/api/v1/user', userRoutes);
+app.use('/api/v1/admin', adminRoutes);
 app.all('/*', (_req, _res, next) => {
     const err = (0, errorHandler_1.createCustomError)("URL doesn't exist", 404);
     next(err);

@@ -10,11 +10,20 @@ const userSchema = new Schema({
       message: () => `Incorrect email`
     },
   },
+  username:{
+    type:String,
+    required:true
+  },
   password:{
     type:String,
     min:[8, "Password must be minimum 8 characters long."]
   },
-  characters: [Types.ObjectId]
+  characters: [Types.ObjectId],
+  role:{
+    type: String,
+    enum:["user","admin","moderator"],
+    default:"user"
+  }
 });
 
 

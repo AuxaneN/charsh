@@ -3,8 +3,11 @@ import { Request, Response } from 'express';
 import {asyncWrapper} from '../middleware/async'
 // Models
 import {Character} from '../models/Character'
+import User from '../models/User'
+
 //utils
 import {convertToWebp} from '../utils/imageUtils'
+import {getUserId} from '../utils/userUtils'
 
 import * as fileUpload from 'express-fileupload'
 
@@ -20,7 +23,10 @@ export const getAllCharacters = asyncWrapper(async (_req:Request,_res:Response) 
 export const createCharacter = asyncWrapper(async (_req:Request, _res:Response) => {
     let character = new Character(_req.body)
     await character.save()
-
+    const userId = _req.user._id
+    const user = await User.findOne({_id: userId})
+    user.characters.push(character._id)
+    user.save()
     return _res.status(200).json(character)
 })
 

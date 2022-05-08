@@ -22,20 +22,18 @@ var __importStar = (this && this.__importStar) || function (mod) {
     __setModuleDefault(result, mod);
     return result;
 };
-var __importDefault = (this && this.__importDefault) || function (mod) {
-    return (mod && mod.__esModule) ? mod : { "default": mod };
-};
 Object.defineProperty(exports, "__esModule", { value: true });
 const express = __importStar(require("express"));
 const router = express.Router();
-const passport_1 = __importDefault(require("passport"));
-require('../utils/passport')(passport_1.default);
+const characterIsAccessible = require("../middleware/characterIsAccessible");
+const isAuthenticated = require("../middleware/isAuthenticated");
+const isOwner = require("../middleware/isOwner");
 const characters_1 = require("../controllers/characters");
-router.get('/', [passport_1.default.authenticate('jwt', { session: false })], characters_1.getAllCharacters);
-router.post('/', passport_1.default.authenticate('jwt', { session: false }), characters_1.createCharacter);
-router.route('/:id').get(characters_1.getOneCharacter);
+router.get('/', [isAuthenticated], characters_1.getAllCharacters);
+router.post('/', isAuthenticated, characters_1.createCharacter);
+router.get('/:id', [isAuthenticated, characterIsAccessible], characters_1.getOneCharacter);
 router.route('/:id').delete(characters_1.deleteCharacter);
-router.route('/:id/:version').put(characters_1.updateOneCharacter);
-router.route('/:id/:version/spiceitup').put(characters_1.uploadImages);
+router.put('/:id/:version', [isAuthenticated, isOwner], characters_1.updateOneCharacter);
+router.put('/:id/:version/spiceitup', [isAuthenticated, isOwner], characters_1.uploadImages);
 module.exports = router;
 //# sourceMappingURL=characters.js.map

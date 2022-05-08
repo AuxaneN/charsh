@@ -51,11 +51,17 @@ exports.register = (0, async_1.asyncWrapper)((_req, _res) => __awaiter(void 0, v
     return _res.status(200).json({ msg: "Welcome :)", user: user });
 }));
 exports.userInfo = (0, async_1.asyncWrapper)((_req, _res) => __awaiter(void 0, void 0, void 0, function* () {
-    const userId = _req.user._id;
-    console.log("User ID :", userId);
-    const user = yield User_1.default.findOne({ _id: userId });
-    console.log(user);
-    return _res.status(200).json({ msg: "User info page", data: user });
+    const userParam = _req.user;
+    console.log("User ID :", userParam);
+    let userId;
+    if (userParam) {
+        userId = userParam._id;
+        console.log("User ID :", userId);
+        const user = yield User_1.default.findOne({ _id: userId });
+        console.log(user);
+        return _res.status(200).json({ msg: "User info page", data: user });
+    }
+    return _res.status(500).json({ msg: "An error occured" });
 }));
 exports.deleteUser = (0, async_1.asyncWrapper)((_req, _res) => __awaiter(void 0, void 0, void 0, function* () {
     yield User_1.default.deleteMany();

@@ -22,20 +22,16 @@ var __importStar = (this && this.__importStar) || function (mod) {
     __setModuleDefault(result, mod);
     return result;
 };
-var __importDefault = (this && this.__importDefault) || function (mod) {
-    return (mod && mod.__esModule) ? mod : { "default": mod };
-};
 Object.defineProperty(exports, "__esModule", { value: true });
 const express = __importStar(require("express"));
 const router = express.Router();
-const passport_1 = __importDefault(require("passport"));
-require('../utils/passport')(passport_1.default);
+const isAuthenticated = require('../middleware/isAuthenticated');
 const isAdmin = require('../middleware/isAdmin');
 const user_1 = require("../controllers/user");
 router.route('/login').post(user_1.login);
 router.route('/register').post(user_1.register);
 router.post('/register-admin', isAdmin, user_1.registerAdmin);
-router.post('/oops', [passport_1.default.authenticate('jwt', { session: false }), isAdmin], user_1.deleteUser);
-router.get('/account-information', passport_1.default.authenticate('jwt', { session: false }), user_1.userInfo);
+router.post('/oops', [isAuthenticated, isAdmin], user_1.deleteUser);
+router.get('/account-information', isAuthenticated, user_1.userInfo);
 module.exports = router;
 //# sourceMappingURL=user.js.map

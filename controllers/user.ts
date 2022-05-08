@@ -2,7 +2,7 @@ import { Request, Response,NextFunction } from 'express';
 import {asyncWrapper} from '../middleware/async'
 import User from "../models/User"
 import {generatePassword, validatePassword, issueJWT} from "../utils/userUtils"
-
+import * as mongoose from 'mongoose'
 export const login = asyncWrapper(async (_req:Request,_res:Response, _next:NextFunction) => {
   console.log("Finding user in db")
   await User.findOne({email: _req.body.email})
@@ -44,11 +44,20 @@ export const register = asyncWrapper(async (_req:Request,_res:Response) => {
 
 
 export const userInfo = asyncWrapper(async (_req:Request,_res:Response) => {
-  const userId = _req.user._id
-  console.log("User ID :", userId)
-  const user = await User.findOne({_id: userId})
-  console.log(user)
-  return _res.status(200).json({msg:"User info page", data:user})
+  const userParam = _req.user
+  console.log("User ID :", userParam)
+
+  let userId:Express.User["_id"];
+  if(userParam){
+    userId = userParam._id
+    console.log("User ID :", userId)
+    const user = await User.findOne({_id: userId})
+    console.log(user)
+    return _res.status(200).json({msg:"User info page", data:user})
+  }
+
+  return _res.status(500).json({msg:"An error occured"})
+
 })
 
 export const deleteUser = asyncWrapper(async(_req:Request, _res:Response)=>{

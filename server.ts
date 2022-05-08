@@ -3,6 +3,7 @@ import config from 'config'
 import cors from 'cors'
 import fileUpload from 'express-fileupload'
 import passport from 'passport'
+import * as mongoose from 'mongoose'
 
 import * as morgan from 'morgan'
 
@@ -39,6 +40,13 @@ app.use('/api/v1/characters', characterRoutes)
 app.use('/api/v1/user', userRoutes)
 app.use('/api/v1/admin', adminRoutes)
 
+declare global {
+  namespace Express {
+    interface User {
+      _id: mongoose.Types.ObjectId
+    }
+  }
+}
 
 
 // // Error handling

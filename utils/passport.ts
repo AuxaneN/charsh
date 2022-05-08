@@ -22,7 +22,7 @@ module.exports = (passport : any) =>{
         return done(err, false)
       }
       if(user){
-        return done(null,user)
+        return done(null, user)
       } else {
         return done(null, false)
       }

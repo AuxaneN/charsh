@@ -22,17 +22,13 @@ var __importStar = (this && this.__importStar) || function (mod) {
     __setModuleDefault(result, mod);
     return result;
 };
-var __importDefault = (this && this.__importDefault) || function (mod) {
-    return (mod && mod.__esModule) ? mod : { "default": mod };
-};
 Object.defineProperty(exports, "__esModule", { value: true });
 const express = __importStar(require("express"));
 const router = express.Router();
-const passport_1 = __importDefault(require("passport"));
-require('../utils/passport')(passport_1.default);
 let isAdmin = require('../middleware/isAdmin');
+const isAuthenticated = require('../middleware/isAuthenticated');
 const admin_1 = require("../controllers/admin");
-router.use(passport_1.default.authenticate('jwt', { session: false }));
+router.use(isAuthenticated);
 router.use(isAdmin);
 router.route('/dashboard').get(admin_1.adminDashboard);
 module.exports = router;

@@ -1,13 +1,12 @@
 import {Request, Response, NextFunction} from 'express'
 //model
 import User from '../models/User'
-//utils
-// import {getUserId} from '../utils/userUtils'
 
 module.exports =  function(_req:Request, _res:Response, _next:NextFunction) {
     console.log("checking for admin")
 
     // const userId = getUserId(_req)
+    if(_req.user){
       const userId = _req.user._id
       console.log(userId)
      User.findOne({_id:userId}).then(
@@ -20,4 +19,7 @@ module.exports =  function(_req:Request, _res:Response, _next:NextFunction) {
          }
        }
      )
+   } else {
+     _res.status(500).json({msg:"Couldn't verify user ID"})
+   }
 }

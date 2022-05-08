@@ -14,19 +14,31 @@ import * as fileUpload from 'express-fileupload'
 
 
 export const getAllCharacters = asyncWrapper(async (_req:Request,_res:Response) => {
-    const character = await Character.find({})
-    console.log(character)
 
-    return _res.status(200).json(character)
+  if(_req.user){
+    const userId = _req.user._id
+    const user = await User.findOne({_id: userId})
+    console.log(user.characters)
+    const characters = await Character.find({_id:{$in:[...user.characters]}})
+    console.log(characters)
+    return _res.status(200).json({msg:`Retrieved characters`, data:characters})
+
+  }
+
+  return _res.status(200).json({msg:`No characters found`})
+
 })
 
 export const createCharacter = asyncWrapper(async (_req:Request, _res:Response) => {
     let character = new Character(_req.body)
     await character.save()
-    const userId = _req.user._id
-    const user = await User.findOne({_id: userId})
-    user.characters.push(character._id)
-    user.save()
+    if(_req.user){
+      const userId = _req.user._id
+      const user = await User.findOne({_id: userId})
+      user.characters.push(character._id)
+      user.save()
+    }
+
     return _res.status(200).json(character)
 })
 

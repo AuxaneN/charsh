@@ -2,7 +2,6 @@ import { Request, Response,NextFunction } from 'express';
 import {asyncWrapper} from '../middleware/async'
 import User from "../models/User"
 import {generatePassword, validatePassword, issueJWT} from "../utils/userUtils"
-import * as mongoose from 'mongoose'
 export const login = asyncWrapper(async (_req:Request,_res:Response, _next:NextFunction) => {
   console.log("Finding user in db")
   await User.findOne({email: _req.body.email})
@@ -27,7 +26,8 @@ export const login = asyncWrapper(async (_req:Request,_res:Response, _next:NextF
   })
 })
 
-export const register = asyncWrapper(async (_req:Request,_res:Response) => {
+export const register = asyncWrapper(async (_req:Request,_res:Response, _next:NextFunction) => {
+  console.log(_req.body)
   const hashedPassword = await generatePassword(_req.body.password)
   console.log(hashedPassword)
   const user = new User({
@@ -37,9 +37,20 @@ export const register = asyncWrapper(async (_req:Request,_res:Response) => {
   })
   console.log(user)
 
-  await user.save()
-
-  return _res.status(200).json({msg:"Welcome :)", user:user})
+  user.save()
+  .then(
+    () => {
+      const token = issueJWT(user)
+      console.log("hello?")
+      // return the jwt to immediately login the user
+      return _res.status(200).json({msg:"Welcome :)", token:token.token})
+    }
+  )
+  .catch(
+    (err:Error) => {
+      _next(err)
+    }
+  )
 })
 
 

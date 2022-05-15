@@ -22,7 +22,7 @@ const app: Application = express()
 
 // import { Document, PassportLocalModel, PassportLocalDocument } from "mongoose";
 // // Middlewares
-app.use(cors())
+
 app.use(express.json())
 app.use(express.urlencoded({extended:true}))
 app.use(fileUpload({
@@ -30,7 +30,7 @@ app.use(fileUpload({
 }))
 app.use(errorHandler)
 app.use(morgan.default('dev'))
-
+app.use(cors())
 
 // Auth setup
 app.use(passport.initialize());

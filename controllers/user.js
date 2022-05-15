@@ -38,7 +38,8 @@ exports.login = (0, async_1.asyncWrapper)((_req, _res, _next) => __awaiter(void 
         _next(err);
     });
 }));
-exports.register = (0, async_1.asyncWrapper)((_req, _res) => __awaiter(void 0, void 0, void 0, function* () {
+exports.register = (0, async_1.asyncWrapper)((_req, _res, _next) => __awaiter(void 0, void 0, void 0, function* () {
+    console.log(_req.body);
     const hashedPassword = yield (0, userUtils_1.generatePassword)(_req.body.password);
     console.log(hashedPassword);
     const user = new User_1.default({
@@ -47,8 +48,15 @@ exports.register = (0, async_1.asyncWrapper)((_req, _res) => __awaiter(void 0, v
         password: hashedPassword
     });
     console.log(user);
-    yield user.save();
-    return _res.status(200).json({ msg: "Welcome :)", user: user });
+    user.save()
+        .then(() => {
+        const token = (0, userUtils_1.issueJWT)(user);
+        console.log("hello?");
+        return _res.status(200).json({ msg: "Welcome :)", token: token.token });
+    })
+        .catch((err) => {
+        _next(err);
+    });
 }));
 exports.userInfo = (0, async_1.asyncWrapper)((_req, _res) => __awaiter(void 0, void 0, void 0, function* () {
     const userParam = _req.user;

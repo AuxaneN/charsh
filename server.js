@@ -48,7 +48,6 @@ const characterRoutes = require('./routes/characters');
 const userRoutes = require('./routes/user');
 const adminRoutes = require('./routes/admin');
 const app = (0, express_1.default)();
-app.use((0, cors_1.default)());
 app.use(express_1.default.json());
 app.use(express_1.default.urlencoded({ extended: true }));
 app.use((0, express_fileupload_1.default)({
@@ -56,6 +55,7 @@ app.use((0, express_fileupload_1.default)({
 }));
 app.use(errorHandler_1.errorHandler);
 app.use(morgan.default('dev'));
+app.use((0, cors_1.default)());
 app.use(passport_1.default.initialize());
 app.use('/api/v1/characters', characterRoutes);
 app.use('/api/v1/user', userRoutes);

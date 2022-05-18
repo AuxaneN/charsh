@@ -48,7 +48,9 @@ export const register = asyncWrapper(async (_req:Request,_res:Response, _next:Ne
   )
   .catch(
     (err:Error) => {
-      _next(err)
+      // Err 11000
+      console.log(err)
+      return _res.status(500).json({msg:"Erreur lors de l'inscription"})
     }
   )
 })

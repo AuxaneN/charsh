@@ -36,8 +36,6 @@ const Login = () => {
   return (
     <div>
     Login page
-
-
         <form>
           <input
             placeholder="email"

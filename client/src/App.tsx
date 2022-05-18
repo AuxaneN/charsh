@@ -13,6 +13,7 @@ import Content from "./components/Content/Content"
 import Home from "./components/Home/Home"
 import Login from "./components/Login/Login"
 import Register from "./components/Register/Register"
+import Messages from "./components/Messages/Messages"
 const App = () => {
 
   const {token} = userStore((state) => state)
@@ -22,6 +23,7 @@ const App = () => {
 
   return (
     <div className="App">
+    <Messages />
     <BrowserRouter>
     <Nav />
     <Content>

@@ -55,7 +55,8 @@ exports.register = (0, async_1.asyncWrapper)((_req, _res, _next) => __awaiter(vo
         return _res.status(200).json({ msg: "Welcome :)", token: token.token });
     })
         .catch((err) => {
-        _next(err);
+        console.log(err);
+        return _res.status(500).json({ msg: "Erreur lors de l'inscription" });
     });
 }));
 exports.userInfo = (0, async_1.asyncWrapper)((_req, _res) => __awaiter(void 0, void 0, void 0, function* () {

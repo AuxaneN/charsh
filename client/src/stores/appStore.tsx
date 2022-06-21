@@ -8,7 +8,7 @@ type appState = {
 }
 
 export const appStore = create<appState>((set) => ({
-    messages: new Map([["1",""]]),
+    messages: new Map([]),
     setMessage: (message) => {
       const key = uuid()
       set(

@@ -1,15 +1,25 @@
+import MessageStyle from "./MessageStyle"
+import {useEffect} from "react"
+
 interface IProps {
 message: string | undefined
 deleteMessage: () => void
 }
 
 const Message = ({ message, deleteMessage }:IProps) => {
+  useEffect(()=> {
+    setTimeout(
+      deleteMessage
+      ,5000
+    )
+  }, [])
+
   return (
-    <div
-    className=""
-    onClick={deleteMessage}>
+    <MessageStyle
+    onClick={deleteMessage}
+    >
     {message}
-    </div>
+    </MessageStyle>
   )
 }
 

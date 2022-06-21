@@ -4,7 +4,11 @@ import axios from "axios"
 type Character = {
 body:string
 // Name, pronouns, age, height, Species
-infos?:string,
+infos?:{
+  name:string,
+  height:number,
+  age:number
+},
 about?:string
 //Qualities, flaws
 personnality?:string,
@@ -13,24 +17,40 @@ face?:string,
 // Happy, neutral, surprised, sad, scared, fucking horny man > 6 image urls
 expressions?:string,
 }
+type CharacterObject = {
+    data:{[key:string]:Character}
+    isPublic: boolean
+    id:string
+}
 
 type CharacterState = {
   character?:Character,
-  getCharacter: () => void
+  characterList?:Array<CharacterObject>
+  getCharacter: (id:string) => void
+  getAllCharacters: () => void
 }
 
-export const useStore = create<CharacterState>((set) => ({
+export const characterStore = create<CharacterState>((set) => ({
     character:{
-      body:"null"
+      body:""
     },
-    getCharacter: () => {
-      axios.get("v1/characters/6276ade659ff7c2d0e0d3073")
-      set(
-      () => ({
-        character: {
-          body:"hello"
-        }
-      })
-    )}
+    characterList:[],
+    getCharacter: async (id) => {
+        const res = await axios.get(`/api/v1/characters/${id}`)
+        set(
+        () => ({
+          character: res.data
+        })
+      )
+    },
+    getAllCharacters: async () => {
+        const res = await axios.get("/api/v1/characters/")
+        console.log("Retrieved characters", res.data)
+        set(
+        () => ({
+          characterList: res.data.data
+        })
+      )
+    }
   })
 )

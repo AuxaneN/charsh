@@ -5,16 +5,20 @@ import {appStore} from "./appStore"
 type userState = {
   user?:string
   token:string
+  setToken:(localToken:string)=>void
   login: (email:string, password:string) => Promise<boolean|void>
+  logout: ()=>void
   register: (email:string, password:string) => Promise<boolean|void>
 }
+const {setMessage} = appStore.getState()
 
 export const userStore = create<userState>((set) => ({
   user:"",
   token:"",
+  setToken: (localToken) => {
+    set(()=>({token:localToken}))
+  },
   login: async(email, password) => {
-    const {setMessage} = appStore.getState()
-
     const config = {
       headers : {"Content-Type":"application/json"}
     }
@@ -29,6 +33,7 @@ export const userStore = create<userState>((set) => ({
       console.log(res)
       set(()=>({token:res.data.token}))
       setMessage("Login successful")
+      localStorage.setItem("token", res.data.token)
       return(res.data.success)
 
     }catch(err:any){
@@ -37,6 +42,11 @@ export const userStore = create<userState>((set) => ({
 
       return false
     }
+  },
+  logout: ()=> {
+    localStorage.removeItem("token")
+    set(()=>({token:""}))
+    setMessage("Logout Successful")
   },
   register: async (email, password) => {
     const {setMessage} = appStore.getState()

@@ -12,6 +12,10 @@ const NavStyle = styled.nav`
   background:${props => props.theme.ligthBg};
   box-shadow:${props => props.theme.shadowMenu};
 
+  svg{
+    width: 1.5rem;
+    height: 1.5rem;
+  }
   .static-blocks{
     display: block;
     display: flex;

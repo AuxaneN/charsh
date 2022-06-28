@@ -20,6 +20,8 @@ import Logout from "./components/Logout/Logout"
 import Register from "./components/Register/Register"
 import Messages from "./components/Messages/Messages"
 import Characters from "./components/Characters/Characters"
+import Character from "./components/Character/Character"
+
 const App = () => {
 
   let token:string;
@@ -45,7 +47,7 @@ const App = () => {
 
   return (
     <ThemeProvider theme={defaultTheme}>
-      <div className="App bg-gray-50 md:flex md:flex-row relative z-0">
+      <div className="App">
       <Messages />
       <BrowserRouter>
         <Nav loggedIn={token ? true : false}/>
@@ -57,8 +59,9 @@ const App = () => {
               <Route path="/logout" element={<Logout />} />
               <Route path="/register" element={<Register/> } />
               <Route path="/characters" element={<Characters/> } />
+              <Route path="/characters/:id" element={<Character /> } />
             </Routes>
-            <p className="fixed bottom-0 text-gray-500 text-sm">
+            <p className="credits">
             Made with 💖 by <a href="https://twitter.com/casyus" target="_blank" rel="no-referrer no-opener">@casyus</a>
             </p>
           </>

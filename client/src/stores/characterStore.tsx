@@ -2,6 +2,7 @@ import create from "zustand"
 import axios from "axios"
 
 type Character = {
+_id:string
 body:string
 // Name, pronouns, age, height, Species
 infos?:{
@@ -20,7 +21,7 @@ expressions?:string,
 type CharacterObject = {
     data:{[key:string]:Character}
     isPublic: boolean
-    id:string
+    _id:string
 }
 
 type CharacterState = {
@@ -31,15 +32,13 @@ type CharacterState = {
 }
 
 export const characterStore = create<CharacterState>((set) => ({
-    character:{
-      body:""
-    },
     characterList:[],
     getCharacter: async (id) => {
         const res = await axios.get(`/api/v1/characters/${id}`)
+        console.log(res.data.data)
         set(
         () => ({
-          character: res.data
+          character: res.data.data
         })
       )
     },

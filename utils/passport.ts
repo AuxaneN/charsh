@@ -15,7 +15,7 @@ const options = {
 
 module.exports = (passport : any) =>{
   passport.use(new Strategy(options, function(jwt_payload:JWTPayload, done : Function){
-    console.log(jwt_payload)
+    console.log("jwt_payload passport.ts",jwt_payload)
 
     User.findOne({_id:jwt_payload.id}, function(err:Error, user:string){
       if(err){

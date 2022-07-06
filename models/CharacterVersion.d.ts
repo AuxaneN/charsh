@@ -1,9 +1,9 @@
 /// <reference types="mongoose/types/PipelineStage" />
 /// <reference types="mongoose/types/Error" />
 /// <reference types="mongoose/types/Connection" />
-import { Schema } from 'mongoose';
+import { Schema } from "mongoose";
 interface ICharacter {
-    body: string;
+    body?: string;
     infos?: string;
     about?: string;
     personnality?: string;

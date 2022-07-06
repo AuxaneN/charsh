@@ -29,11 +29,11 @@ const characterIsAccessible = require("../middleware/characterIsAccessible");
 const isAuthenticated = require("../middleware/isAuthenticated");
 const isOwner = require("../middleware/isOwner");
 const characters_1 = require("../controllers/characters");
-router.get('/', [isAuthenticated], characters_1.getAllCharacters);
-router.post('/', isAuthenticated, characters_1.createCharacter);
-router.get('/:id', [isAuthenticated, characterIsAccessible], characters_1.getOneCharacter);
-router.route('/:id').delete(characters_1.deleteCharacter);
-router.put('/:id/:version', [isAuthenticated, isOwner], characters_1.updateOneCharacter);
-router.put('/:id/:version/spiceitup', [isAuthenticated, isOwner], characters_1.uploadImages);
+router.get("/", [isAuthenticated], characters_1.getAllCharacters);
+router.post("/", [isAuthenticated], characters_1.createCharacter);
+router.get("/:id", [isAuthenticated, characterIsAccessible], characters_1.getOneCharacter);
+router.route("/:id").delete(characters_1.deleteCharacter);
+router.put("/:id/:version", [isAuthenticated, isOwner], characters_1.updateOneCharacter);
+router.put("/:id/:version/spiceitup", [isAuthenticated, isOwner], characters_1.uploadImages);
 module.exports = router;
 //# sourceMappingURL=characters.js.map

@@ -12,9 +12,8 @@ exports.characterVersionSchema = new mongoose_1.Schema({
         validate: {
             validator: (v) => {
                 return /\w+(.webp)/g.test(v);
-            }
+            },
         },
-        required: [true, "A body image must be uploaded "]
     },
     infos: infoSchema_1.infoSchema,
     about: {

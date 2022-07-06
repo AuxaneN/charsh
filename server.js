@@ -44,31 +44,30 @@ const morgan = __importStar(require("morgan"));
 const utils_1 = require("./db/utils");
 const errorHandler_1 = require("./middleware/errorHandler");
 const port = config_1.default.get("port");
-const characterRoutes = require('./routes/characters');
-const userRoutes = require('./routes/user');
-const adminRoutes = require('./routes/admin');
+const characterRoutes = require("./routes/characters");
+const userRoutes = require("./routes/user");
+const adminRoutes = require("./routes/admin");
 const app = (0, express_1.default)();
 app.use(express_1.default.json());
 app.use(express_1.default.urlencoded({ extended: true }));
 app.use((0, express_fileupload_1.default)({
-    createParentPath: true
+    createParentPath: true,
 }));
 app.use(errorHandler_1.errorHandler);
-app.use(morgan.default('dev'));
+app.use(morgan.default("dev"));
 app.use((0, cors_1.default)());
 app.use(passport_1.default.initialize());
-app.use('/api/v1/characters', characterRoutes);
-app.use('/api/v1/user', userRoutes);
-app.use('/api/v1/admin', adminRoutes);
-app.all('/*', (_req, _res, next) => {
+app.use("/api/v1/characters", characterRoutes);
+app.use("/api/v1/user", userRoutes);
+app.use("/api/v1/admin", adminRoutes);
+app.all("/*", (_req, _res, next) => {
     const err = (0, errorHandler_1.createCustomError)("URL doesn't exist", 404);
     next(err);
 });
 app.listen(port, () => __awaiter(void 0, void 0, void 0, function* () {
     console.log("Attempting to connect to database");
-    yield (0, utils_1.connectDB)(config_1.default.get("mongo_uri"))
-        .then(function () {
-        console.log('Connection established');
+    yield (0, utils_1.connectDB)(config_1.default.get("mongo_uri")).then(function () {
+        console.log("Connection established");
     }, function (error) {
         console.error("Error connecting to the database", error);
     });

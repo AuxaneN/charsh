@@ -3,14 +3,14 @@ var __importDefault = (this && this.__importDefault) || function (mod) {
     return (mod && mod.__esModule) ? mod : { "default": mod };
 };
 Object.defineProperty(exports, "__esModule", { value: true });
-const config = require('config');
+const config = require("config");
 const passport_jwt_1 = require("passport-jwt");
 const passport_jwt_2 = require("passport-jwt");
 const User_1 = __importDefault(require("../models/User"));
-const key = config.get('jwt_secret');
+const key = config.get("jwt_secret");
 const options = {
     jwtFromRequest: passport_jwt_2.ExtractJwt.fromAuthHeaderAsBearerToken(),
-    secretOrKey: key
+    secretOrKey: key,
 };
 module.exports = (passport) => {
     passport.use(new passport_jwt_1.Strategy(options, function (jwt_payload, done) {

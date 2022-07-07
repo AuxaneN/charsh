@@ -21,7 +21,7 @@ import Register from "./components/Register/Register";
 import Messages from "./components/Messages/Messages";
 import Characters from "./components/Characters/Characters";
 import Character from "./components/Character/Character";
-import Form from "./components/Form/Form";
+import CharacterCreation from "./components/CharaterCreation/CharacterCreation";
 
 const App = () => {
   let token: string;
@@ -60,7 +60,10 @@ const App = () => {
                 <Route path="/register" element={<Register />} />
                 <Route path="/characters" element={<Characters />} />
                 <Route path="/characters/:id" element={<Character />} />
-                <Route path="/create-character" element={<Form />} />
+                <Route
+                  path="/create-character"
+                  element={<CharacterCreation />}
+                />
               </Routes>
               <p className="credits">
                 Made with 💖 by{" "}

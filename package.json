@@ -9,7 +9,7 @@
     "client": "npm run dev --prefix client",
     "auto-compile": "tsc -w -p tsconfig.json",
     "compile": "tsc -p tsconfig.json",
-    "start": "concurrently \"npm run server\" \"npm run client\" \"npm run auto-compile\" "
+    "start": "concurrently \"npm run server\" \"npm run client\""
   },
   "author": "Owen",
   "license": "ISC",

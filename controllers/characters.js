@@ -21,14 +21,16 @@ exports.getAllCharacters = (0, async_1.asyncWrapper)((_req, _res) => __awaiter(v
     if (_req.user) {
         const userId = _req.user._id;
         const user = yield User_1.default.findOne({ _id: userId });
-        console.log(user.characters);
-        const characters = yield Character_1.Character.find({
-            _id: { $in: [...user.characters] },
-        });
-        console.log(characters);
-        return _res
-            .status(200)
-            .json({ msg: `Retrieved characters`, data: characters });
+        if (user) {
+            console.log(user.characters);
+            const characters = yield Character_1.Character.find({
+                _id: { $in: [...user.characters] },
+            });
+            console.log(characters);
+            return _res
+                .status(200)
+                .json({ msg: `Retrieved characters`, data: characters });
+        }
     }
     return _res.status(200).json({ msg: `No characters found` });
 }));
@@ -36,16 +38,21 @@ exports.createCharacter = (0, async_1.asyncWrapper)((_req, _res) => __awaiter(vo
     console.log("This is painful");
     if (_req.user) {
         console.log(_req.body);
-        const character = yield new Character_1.Character({
+        const character = new Character_1.Character({
             data: { default: { infos: { name: _req.body.name } } },
         });
         console.log(character);
         yield character.save();
         const userId = _req.user._id;
         const user = yield User_1.default.findOne({ _id: userId });
-        user.characters.push(character._id);
-        user.save();
-        return _res.status(200).json(character);
+        if (user) {
+            user.characters.push(character._id);
+            user.save();
+            return _res.status(200).json(character);
+        }
+        else {
+            return _res.status(401).json({ msg: "Couldn't find a user account" });
+        }
     }
     else {
         return _res.status(200).json({ msg: "Couldn't find user account" });

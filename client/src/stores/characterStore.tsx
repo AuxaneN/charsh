@@ -30,6 +30,8 @@ type CharacterState = {
   getCharacter: (id: string) => void;
   getAllCharacters: () => void;
   createCharacter: (formData: FormData) => void;
+  uploadImages: (id: string, version: string, media: FormData) => void;
+  updateCharacter: (id: string, version: string, character: Character) => void;
 };
 
 export const characterStore = create<CharacterState>((set) => ({
@@ -51,5 +53,14 @@ export const characterStore = create<CharacterState>((set) => ({
   createCharacter: async (formData) => {
     const body = formData;
     await axios.post("/api/v1/characters/", body);
+  },
+  uploadImages: async (id, version, media) => {
+    const body = media;
+    console.log(body);
+  },
+  updateCharacter: async (id, version, character) => {
+    const body = JSON.stringify(character);
+    console.log(body);
+    //await axios.put(`/api/v1/characters/${id}/${version}`, character);
   },
 }));

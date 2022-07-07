@@ -16,14 +16,16 @@ export const getAllCharacters = asyncWrapper(
     if (_req.user) {
       const userId = _req.user._id;
       const user = await User.findOne({ _id: userId });
-      console.log(user.characters);
-      const characters = await Character.find({
-        _id: { $in: [...user.characters] },
-      });
-      console.log(characters);
-      return _res
-        .status(200)
-        .json({ msg: `Retrieved characters`, data: characters });
+      if (user) {
+        console.log(user.characters);
+        const characters = await Character.find({
+          _id: { $in: [...user.characters] },
+        });
+        console.log(characters);
+        return _res
+          .status(200)
+          .json({ msg: `Retrieved characters`, data: characters });
+      }
     }
 
     return _res.status(200).json({ msg: `No characters found` });
@@ -37,7 +39,7 @@ export const createCharacter = asyncWrapper(
       //let character = new Character(_req.body);
       // TODO - Require only a name and a picture
       console.log(_req.body);
-      const character = await new Character({
+      const character = new Character({
         data: { default: { infos: { name: _req.body.name } } },
       });
 
@@ -45,9 +47,14 @@ export const createCharacter = asyncWrapper(
       await character.save();
       const userId = _req.user._id;
       const user = await User.findOne({ _id: userId });
-      user.characters.push(character._id);
-      user.save();
-      return _res.status(200).json(character);
+      if (user) {
+        user.characters.push(character._id);
+        user.save();
+
+        return _res.status(200).json(character);
+      } else {
+        return _res.status(401).json({ msg: "Couldn't find a user account" });
+      }
     } else {
       return _res.status(200).json({ msg: "Couldn't find user account" });
     }

@@ -40,7 +40,14 @@ export const createCharacter = asyncWrapper(
       // TODO - Require only a name and a picture
       console.log(_req.body);
       const character = new Character({
-        data: { default: { infos: { name: _req.body.name } } },
+        data: {
+          default: {
+            infos: {
+              name: _req.body.name,
+            },
+            expressions: {},
+          },
+        },
       });
 
       console.log(character);
@@ -100,7 +107,7 @@ export const uploadImages = asyncWrapper(
   async (_req: Request, _res: Response) => {
     const { id, version } = _req.params;
     const { bodyPart } = _req.body;
-
+    console.log(_req.files);
     if (!_req.files) {
       _res.send({
         status: false,
@@ -111,41 +118,53 @@ export const uploadImages = asyncWrapper(
     else {
       const character = await Character.findById(id);
       const path = `./uploads/${id}/${bodyPart}/`;
-      switch (bodyPart) {
-        case "body":
-          const file = _req.files.body as fileUpload.UploadedFile;
-          const imageName: string = file.name;
-          await file.mv(path + imageName);
+      for (const fileName in _req.files) {
+        let imageName: string = _req.files[fileName].name;
+        let compressedImageName;
+        let value;
+        switch (fileName) {
+          case "body":
+            console.log("Body image", _req.files[fileName]);
+            const file = _req.files[fileName] as fileUpload.UploadedFile;
+            await file.mv(path + imageName);
 
-          const compressedImageName = await convertToWebp(path, imageName);
-          console.log(compressedImageName);
-          let value = character.data.get(version);
-          value.body = compressedImageName;
+            compressedImageName = await convertToWebp(path, imageName);
+            console.log(compressedImageName);
+            value = character.data.get(version);
+            value.body = compressedImageName;
 
-          character.data.set(version, { ...value });
+            character.data.set(version, { ...value });
 
-          await character.save();
+            break;
+          case "expressions1":
+          case "expressions2":
+          case "expressions3":
+          case "expressions4":
+          case "expressions5":
+          case "expressions6":
+            const files = _req.files as fileUpload.FileArray;
+            // we use a for of loop to be able to wait for it to finish before calling our character.save()
 
-          break;
-        case "expression":
-          const files = _req.files as fileUpload.FileArray;
-          // we use a for of loop to be able to wait for it to finish before calling our character.save()
-          for (const expression of Object.keys(_req.files)) {
+            console.log("Expression image", _req.files[fileName]);
             // we have to specify the type here or typescript yells at us
-            let image = files[expression] as fileUpload.UploadedFile;
-            let imageName = image.name;
-            await image.mv(path + `${expression}/` + imageName);
-            const compressedImageName = await convertToWebp(
-              path + `${expression}/`,
+            let image = files[fileName] as fileUpload.UploadedFile;
+            await image.mv(path + `${fileName}/` + imageName);
+            compressedImageName = await convertToWebp(
+              path + `${fileName}/`,
               imageName
             );
-            let value = character.data.get(version);
-            value.expressions[expression] = compressedImageName;
-            character.data.set(version, value);
-          }
-          await character.save();
-          break;
+            value = character.data.get(version);
+            console.log("VALUE", value);
+            value.expressions[fileName] = compressedImageName;
+            console.log("VALUE EXPRESSION", value.expressions);
+            console.log("CHARACTER DATA", character.data);
+            character.data.set(version, { ...value });
+
+            break;
+        }
       }
+
+      await character.save();
       return _res.status(200).json({ msg: "Images uploaded !" });
     }
     return _res.status(500).json({ msg: `Something went wrong` });

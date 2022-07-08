@@ -51,6 +51,10 @@ router.route("/:id").delete(deleteCharacter);
 // Must be logged in and own the character
 router.put("/:id/:version", [isAuthenticated, isOwner], updateOneCharacter);
 // Must be logged in and own the character
-router.put("/:id/:version/spiceitup", [isAuthenticated, isOwner], uploadImages);
+router.put(
+  "/uploadImages/:id/:version/",
+  [isAuthenticated, isOwner],
+  uploadImages
+);
 
 module.exports = router;

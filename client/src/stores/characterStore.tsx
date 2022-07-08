@@ -25,7 +25,7 @@ type CharacterObject = {
 };
 
 type CharacterState = {
-  character?: Character;
+  character?: CharacterObject;
   characterList?: Array<CharacterObject>;
   getCharacter: (id: string) => void;
   getAllCharacters: () => void;
@@ -39,24 +39,26 @@ export const characterStore = create<CharacterState>((set) => ({
   getCharacter: async (id) => {
     const res = await axios.get(`/api/v1/characters/${id}`);
     console.log(res.data.data);
-    set(() => ({
-      character: res.data.data,
-    }));
+    set({
+      character: res.data,
+    });
   },
   getAllCharacters: async () => {
     const res = await axios.get("/api/v1/characters/");
     console.log("Retrieved characters", res.data);
-    set(() => ({
+    set({
       characterList: res.data.data,
-    }));
+    });
   },
   createCharacter: async (formData) => {
     const body = formData;
-    await axios.post("/api/v1/characters/", body);
+    const res = await axios.post("/api/v1/characters/", body);
+    set({ character: res.data });
   },
   uploadImages: async (id, version, media) => {
     const body = media;
-    console.log(body);
+
+    await axios.put(`/api/v1/characters/uploadImages/${id}/${version}`, body);
   },
   updateCharacter: async (id, version, character) => {
     const body = JSON.stringify(character);

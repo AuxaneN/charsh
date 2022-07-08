@@ -34,6 +34,6 @@ router.post("/", [isAuthenticated], characters_1.createCharacter);
 router.get("/:id", [isAuthenticated, characterIsAccessible], characters_1.getOneCharacter);
 router.route("/:id").delete(characters_1.deleteCharacter);
 router.put("/:id/:version", [isAuthenticated, isOwner], characters_1.updateOneCharacter);
-router.put("/:id/:version/spiceitup", [isAuthenticated, isOwner], characters_1.uploadImages);
+router.put("/uploadImages/:id/:version/", [isAuthenticated, isOwner], characters_1.uploadImages);
 module.exports = router;
 //# sourceMappingURL=characters.js.map

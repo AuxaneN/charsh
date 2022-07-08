@@ -3,53 +3,53 @@ Object.defineProperty(exports, "__esModule", { value: true });
 exports.expressionSchema = void 0;
 const mongoose_1 = require("mongoose");
 exports.expressionSchema = new mongoose_1.Schema({
-    happy: {
+    expressions1: {
         type: String,
         validate: {
             validator: (v) => {
                 return /\w+(.webp)/g.test(v);
-            }
-        }
+            },
+        },
     },
-    neutral: {
+    expressions2: {
         type: String,
         validate: {
             validator: (v) => {
                 return /\w+(.webp)/g.test(v);
-            }
-        }
+            },
+        },
     },
-    surprised: {
+    expressions3: {
         type: String,
         validate: {
             validator: (v) => {
                 return /\w+(.webp)/g.test(v);
-            }
-        }
+            },
+        },
     },
-    sad: {
+    expressions4: {
         type: String,
         validate: {
             validator: (v) => {
                 return /\w+(.webp)/g.test(v);
-            }
-        }
+            },
+        },
     },
-    scared: {
+    expressions5: {
         type: String,
         validate: {
             validator: (v) => {
                 return /\w+(.webp)/g.test(v);
-            }
-        }
+            },
+        },
     },
-    horny: {
+    expressions6: {
         type: String,
         validate: {
             validator: (v) => {
                 return /\w+(.webp)/g.test(v);
-            }
-        }
+            },
+        },
     },
 });
 //# sourceMappingURL=expressionSchema.js.map

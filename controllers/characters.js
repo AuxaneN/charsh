@@ -39,7 +39,14 @@ exports.createCharacter = (0, async_1.asyncWrapper)((_req, _res) => __awaiter(vo
     if (_req.user) {
         console.log(_req.body);
         const character = new Character_1.Character({
-            data: { default: { infos: { name: _req.body.name } } },
+            data: {
+                default: {
+                    infos: {
+                        name: _req.body.name,
+                    },
+                    expressions: {},
+                },
+            },
         });
         console.log(character);
         yield character.save();
@@ -86,6 +93,7 @@ exports.updateOneCharacter = (0, async_1.asyncWrapper)((_req, _res) => __awaiter
 exports.uploadImages = (0, async_1.asyncWrapper)((_req, _res) => __awaiter(void 0, void 0, void 0, function* () {
     const { id, version } = _req.params;
     const { bodyPart } = _req.body;
+    console.log(_req.files);
     if (!_req.files) {
         _res.send({
             status: false,
@@ -95,32 +103,42 @@ exports.uploadImages = (0, async_1.asyncWrapper)((_req, _res) => __awaiter(void 
     else {
         const character = yield Character_1.Character.findById(id);
         const path = `./uploads/${id}/${bodyPart}/`;
-        switch (bodyPart) {
-            case "body":
-                const file = _req.files.body;
-                const imageName = file.name;
-                yield file.mv(path + imageName);
-                const compressedImageName = yield (0, imageUtils_1.convertToWebp)(path, imageName);
-                console.log(compressedImageName);
-                let value = character.data.get(version);
-                value.body = compressedImageName;
-                character.data.set(version, Object.assign({}, value));
-                yield character.save();
-                break;
-            case "expression":
-                const files = _req.files;
-                for (const expression of Object.keys(_req.files)) {
-                    let image = files[expression];
-                    let imageName = image.name;
-                    yield image.mv(path + `${expression}/` + imageName);
-                    const compressedImageName = yield (0, imageUtils_1.convertToWebp)(path + `${expression}/`, imageName);
-                    let value = character.data.get(version);
-                    value.expressions[expression] = compressedImageName;
-                    character.data.set(version, value);
-                }
-                yield character.save();
-                break;
+        for (const fileName in _req.files) {
+            let imageName = _req.files[fileName].name;
+            let compressedImageName;
+            let value;
+            switch (fileName) {
+                case "body":
+                    console.log("Body image", _req.files[fileName]);
+                    const file = _req.files[fileName];
+                    yield file.mv(path + imageName);
+                    compressedImageName = yield (0, imageUtils_1.convertToWebp)(path, imageName);
+                    console.log(compressedImageName);
+                    value = character.data.get(version);
+                    value.body = compressedImageName;
+                    character.data.set(version, Object.assign({}, value));
+                    break;
+                case "expressions1":
+                case "expressions2":
+                case "expressions3":
+                case "expressions4":
+                case "expressions5":
+                case "expressions6":
+                    const files = _req.files;
+                    console.log("Expression image", _req.files[fileName]);
+                    let image = files[fileName];
+                    yield image.mv(path + `${fileName}/` + imageName);
+                    compressedImageName = yield (0, imageUtils_1.convertToWebp)(path + `${fileName}/`, imageName);
+                    value = character.data.get(version);
+                    console.log("VALUE", value);
+                    value.expressions[fileName] = compressedImageName;
+                    console.log("VALUE EXPRESSION", value.expressions);
+                    console.log("CHARACTER DATA", character.data);
+                    character.data.set(version, Object.assign({}, value));
+                    break;
+            }
         }
+        yield character.save();
         return _res.status(200).json({ msg: "Images uploaded !" });
     }
     return _res.status(500).json({ msg: `Something went wrong` });

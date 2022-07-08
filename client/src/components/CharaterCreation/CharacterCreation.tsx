@@ -1,34 +1,33 @@
 import { useState } from "react";
 import Form from "../Form/Form";
+import Form_2 from "./Form_2";
+import Form_3 from "./Form_3";
 const CharacterCreation = () => {
   // multipart form that sends the data for by form
   //  1 - Name
   //  2 - Body and expressions
   //  3 - Infos
-  const initialState = 1;
-  const [step, setStep] = useState(initialState);
-
+  const component = [<Form />, <Form_2 />, <Form_3 />];
+  const [step, setStep] = useState(0);
   const handlePrev = () => {
-    if (step > 1) {
+    if (step > 0) {
       setStep(step - 1);
     } else {
-      setStep(1);
+      setStep(0);
     }
-    console.log(step);
   };
 
   const handleNext = () => {
-    if (step < 3) {
+    if (step < 2) {
       setStep(step + 1);
     } else {
-      setStep(3);
+      setStep(2);
     }
-    console.log(step);
   };
 
   return (
     <div>
-      <Form />
+      {component[step]}
       <button onClick={handlePrev}>Prev</button>
       <button onClick={handleNext}>Next</button>
     </div>

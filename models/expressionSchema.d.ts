@@ -21,12 +21,12 @@
 /// <reference types="mongoose/types/utility" />
 /// <reference types="mongoose/types/validation" />
 /// <reference types="mongoose/types/inferschematype" />
-import { Schema } from 'mongoose';
+import { Schema } from "mongoose";
 export declare const expressionSchema: Schema<any, import("mongoose").Model<any, any, any, any, any>, {}, {}, any, {}, "type", {
-    happy?: string | undefined;
-    neutral?: string | undefined;
-    surprised?: string | undefined;
-    sad?: string | undefined;
-    scared?: string | undefined;
-    horny?: string | undefined;
+    expressions1?: string | undefined;
+    expressions2?: string | undefined;
+    expressions3?: string | undefined;
+    expressions4?: string | undefined;
+    expressions5?: string | undefined;
+    expressions6?: string | undefined;
 }>;

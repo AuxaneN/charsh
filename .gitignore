@@ -102,3 +102,6 @@ dist
 
 uploads/*
 uploads/
+#Ignore ts compiled files
+**/*.js
+**/*.js.map

@@ -32,6 +32,7 @@ const characters_1 = require("../controllers/characters");
 router.get("/", [isAuthenticated], characters_1.getAllCharacters);
 router.post("/", [isAuthenticated], characters_1.createCharacter);
 router.get("/:id", [isAuthenticated, characterIsAccessible], characters_1.getOneCharacter);
+router.post("/images/:id/", [isAuthenticated, characterIsAccessible], characters_1.getImages);
 router.route("/:id").delete(characters_1.deleteCharacter);
 router.put("/:id/:version", [isAuthenticated, isOwner], characters_1.updateOneCharacter);
 router.put("/uploadImages/:id/:version/", [isAuthenticated, isOwner], characters_1.uploadImages);

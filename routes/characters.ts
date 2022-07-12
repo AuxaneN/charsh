@@ -16,6 +16,7 @@ import {
   createCharacter,
   uploadImages,
   deleteCharacter,
+  getImages,
 } from "../controllers/characters";
 
 /**
@@ -25,6 +26,7 @@ import {
  * @access owner
  */
 router.get("/", [isAuthenticated], getAllCharacters);
+
 /**
  * Create a new character for the logged in user
  * @route "/api/v1/characters/"
@@ -40,6 +42,11 @@ router.post("/", [isAuthenticated], createCharacter);
  * @access owner and whitelist
  */
 router.get("/:id", [isAuthenticated, characterIsAccessible], getOneCharacter);
+router.post(
+  "/images/:id/",
+  [isAuthenticated, characterIsAccessible],
+  getImages
+);
 /**
  * Create a new character for the logged in user
  * @route "/api/v1/characters/"
@@ -50,6 +57,7 @@ router.route("/:id").delete(deleteCharacter);
 
 // Must be logged in and own the character
 router.put("/:id/:version", [isAuthenticated, isOwner], updateOneCharacter);
+
 // Must be logged in and own the character
 router.put(
   "/uploadImages/:id/:version/",

@@ -14,11 +14,12 @@ export const infoSchema = new Schema({
   },
   pronouns: {
     type: String,
-    validate: {
-      validator: function (string: string) {
-        return /[a-zA-Z]+(\/|| )[a-zA-Z]+/g.test(string);
-      },
-      message: (_props: unknown) => "Please use only letters.",
-    },
+    required: false,
+    //validate: {
+    //validator: function (string: string) {
+    //return /[a-zA-Z]+(\/|| )[a-zA-Z]+/g.test(string);
+    //},
+    //message: (_props: unknown) => "Please use only letters.",
+    //},
   },
 });

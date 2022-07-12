@@ -10,18 +10,14 @@ var __awaiter = (this && this.__awaiter) || function (thisArg, _arguments, P, ge
 };
 Object.defineProperty(exports, "__esModule", { value: true });
 exports.asyncWrapper = void 0;
-const errorHandler_1 = require("./errorHandler");
 const asyncWrapper = (fn) => {
     return (req, res, next) => __awaiter(void 0, void 0, void 0, function* () {
         try {
             yield fn(req, res, next);
         }
         catch (error) {
-            let err = (0, errorHandler_1.createCustomError)("Something terrible happened", res.statusCode);
-            if (error instanceof Error) {
-                err = (0, errorHandler_1.createCustomError)(error.message, res.statusCode);
-            }
-            next(err);
+            console.log(error);
+            next(error);
         }
     });
 };

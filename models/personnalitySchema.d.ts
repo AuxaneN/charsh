@@ -21,7 +21,7 @@
 /// <reference types="mongoose/types/utility" />
 /// <reference types="mongoose/types/validation" />
 /// <reference types="mongoose/types/inferschematype" />
-import { Schema } from 'mongoose';
+import { Schema } from "mongoose";
 export declare const personnalitySchema: Schema<any, import("mongoose").Model<any, any, any, any, any>, {}, {}, any, {}, "type", {
     qualities: string[];
     flaws: string[];

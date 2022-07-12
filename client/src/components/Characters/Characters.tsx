@@ -54,6 +54,7 @@ const Characters = () => {
           <Link to="/create-character">Make one ?</Link>
         </div>
       )}
+      <Link to="/create-character">Add another character</Link>
     </>
   );
 };

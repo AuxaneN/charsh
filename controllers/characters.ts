@@ -1,3 +1,5 @@
+const fs = require("fs");
+const path = require("path");
 import { Request, Response } from "express";
 // Middleware
 import { asyncWrapper } from "../middleware/async";
@@ -37,7 +39,6 @@ export const createCharacter = asyncWrapper(
     console.log("This is painful");
     if (_req.user) {
       //let character = new Character(_req.body);
-      // TODO - Require only a name and a picture
       console.log(_req.body);
       const character = new Character({
         data: {
@@ -75,12 +76,24 @@ export const getOneCharacter = asyncWrapper(
     return _res.status(200).json(character);
   }
 );
+export const getImages = asyncWrapper(async (_req: Request, _res: Response) => {
+  const id = _req.params.id;
+  const bodyPart = _req.body.bodyPart;
+  const imageName = _req.body.imageName;
+  console.log("App root", appRoot);
+  console.log(id, bodyPart, imageName);
+  let imageUrl = path.join(appRoot, "uploads", id, bodyPart);
+
+  console.log("imageUrl", imageUrl);
+  return _res.sendFile(imageUrl + "/" + imageName);
+});
 
 export const updateOneCharacter = asyncWrapper(
   async (_req: Request, _res: Response) => {
     try {
       const { id, version } = _req.params;
       // Find the character with the id
+      console.log("REQ BODY", _req.body);
       let character = await Character.findById(id);
       if (character == null) {
         return _res
@@ -90,12 +103,13 @@ export const updateOneCharacter = asyncWrapper(
       // Update based on body or just throw everything in there
       // The Map object lets us use the .get or .set methods to replace things, it's pretty dope
       character.data.set(version, _req.body);
-      console.log(character.data);
+      console.log("UPDATE CHARACTER: ", character.data);
 
       await character.save();
 
       return _res.status(200).json(character);
     } catch (error) {
+      console.log(error);
       return _res
         .status(500)
         .json({ msg: `Something went wrong please try again another time` });
@@ -106,7 +120,6 @@ export const updateOneCharacter = asyncWrapper(
 export const uploadImages = asyncWrapper(
   async (_req: Request, _res: Response) => {
     const { id, version } = _req.params;
-    const { bodyPart } = _req.body;
     console.log(_req.files);
     if (!_req.files) {
       _res.send({
@@ -117,7 +130,7 @@ export const uploadImages = asyncWrapper(
     // in here somewhere check if the file format is correct
     else {
       const character = await Character.findById(id);
-      const path = `./uploads/${id}/${bodyPart}/`;
+      const path = `./uploads/${id}/`;
       for (const fileName in _req.files) {
         let imageName: string = _req.files[fileName].name;
         let compressedImageName;
@@ -126,15 +139,18 @@ export const uploadImages = asyncWrapper(
           case "body":
             console.log("Body image", _req.files[fileName]);
             const file = _req.files[fileName] as fileUpload.UploadedFile;
-            await file.mv(path + imageName);
+            await file.mv(path + "body/" + imageName);
 
-            compressedImageName = await convertToWebp(path, imageName);
+            compressedImageName = await convertToWebp(
+              path + "body/",
+              imageName
+            );
             console.log(compressedImageName);
             value = character.data.get(version);
             value.body = compressedImageName;
-
             character.data.set(version, { ...value });
-
+            console.log("CHARACTER", character.data);
+            await character.save();
             break;
           case "expressions1":
           case "expressions2":
@@ -154,18 +170,15 @@ export const uploadImages = asyncWrapper(
               imageName
             );
             value = character.data.get(version);
-            console.log("VALUE", value);
             value.expressions[fileName] = compressedImageName;
-            console.log("VALUE EXPRESSION", value.expressions);
-            console.log("CHARACTER DATA", character.data);
             character.data.set(version, { ...value });
 
+            await character.save();
             break;
         }
       }
 
-      await character.save();
-      return _res.status(200).json({ msg: "Images uploaded !" });
+      return _res.status(200).json(character);
     }
     return _res.status(500).json({ msg: `Something went wrong` });
   }

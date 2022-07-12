@@ -16,12 +16,7 @@ exports.infoSchema = new mongoose_1.Schema({
     },
     pronouns: {
         type: String,
-        validate: {
-            validator: function (string) {
-                return /[a-zA-Z]+(\/|| )[a-zA-Z]+/g.test(string);
-            },
-            message: (_props) => "Please use only letters.",
-        },
+        required: false,
     },
 });
 //# sourceMappingURL=infoSchema.js.map

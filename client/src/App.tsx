@@ -7,7 +7,8 @@ import defaultTheme from "./styles/defaultTheme";
 
 // Store
 import { userStore } from "./stores/userStore";
-
+import { enableAllPlugins } from "immer";
+enableAllPlugins();
 // Router
 import { BrowserRouter, Routes, Route } from "react-router-dom";
 

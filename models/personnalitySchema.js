@@ -8,16 +8,16 @@ exports.personnalitySchema = new mongoose_1.Schema({
         validate: {
             validator: (v) => {
                 return v.length <= 3;
-            }
-        }
+            },
+        },
     },
     flaws: {
         type: [String],
         validate: {
             validator: (v) => {
                 return v.length <= 3;
-            }
-        }
-    }
+            },
+        },
+    },
 });
 //# sourceMappingURL=personnalitySchema.js.map

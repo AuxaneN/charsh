@@ -12,7 +12,9 @@ var __importDefault = (this && this.__importDefault) || function (mod) {
     return (mod && mod.__esModule) ? mod : { "default": mod };
 };
 Object.defineProperty(exports, "__esModule", { value: true });
-exports.deleteCharacter = exports.uploadImages = exports.updateOneCharacter = exports.getOneCharacter = exports.createCharacter = exports.getAllCharacters = void 0;
+exports.deleteCharacter = exports.uploadImages = exports.updateOneCharacter = exports.getImages = exports.getOneCharacter = exports.createCharacter = exports.getAllCharacters = void 0;
+const fs = require("fs");
+const path = require("path");
 const async_1 = require("../middleware/async");
 const Character_1 = require("../models/Character");
 const User_1 = __importDefault(require("../models/User"));
@@ -70,9 +72,20 @@ exports.getOneCharacter = (0, async_1.asyncWrapper)((_req, _res) => __awaiter(vo
     const character = yield Character_1.Character.findById(id);
     return _res.status(200).json(character);
 }));
+exports.getImages = (0, async_1.asyncWrapper)((_req, _res) => __awaiter(void 0, void 0, void 0, function* () {
+    const id = _req.params.id;
+    const bodyPart = _req.body.bodyPart;
+    const imageName = _req.body.imageName;
+    console.log("App root", appRoot);
+    console.log(id, bodyPart, imageName);
+    let imageUrl = path.join(appRoot, "uploads", id, bodyPart);
+    console.log("imageUrl", imageUrl);
+    return _res.sendFile(imageUrl + "/" + imageName);
+}));
 exports.updateOneCharacter = (0, async_1.asyncWrapper)((_req, _res) => __awaiter(void 0, void 0, void 0, function* () {
     try {
         const { id, version } = _req.params;
+        console.log("REQ BODY", _req.body);
         let character = yield Character_1.Character.findById(id);
         if (character == null) {
             return _res
@@ -80,11 +93,12 @@ exports.updateOneCharacter = (0, async_1.asyncWrapper)((_req, _res) => __awaiter
                 .json({ msg: `No character was found with this ID` });
         }
         character.data.set(version, _req.body);
-        console.log(character.data);
+        console.log("UPDATE CHARACTER: ", character.data);
         yield character.save();
         return _res.status(200).json(character);
     }
     catch (error) {
+        console.log(error);
         return _res
             .status(500)
             .json({ msg: `Something went wrong please try again another time` });
@@ -92,7 +106,6 @@ exports.updateOneCharacter = (0, async_1.asyncWrapper)((_req, _res) => __awaiter
 }));
 exports.uploadImages = (0, async_1.asyncWrapper)((_req, _res) => __awaiter(void 0, void 0, void 0, function* () {
     const { id, version } = _req.params;
-    const { bodyPart } = _req.body;
     console.log(_req.files);
     if (!_req.files) {
         _res.send({
@@ -102,7 +115,7 @@ exports.uploadImages = (0, async_1.asyncWrapper)((_req, _res) => __awaiter(void 
     }
     else {
         const character = yield Character_1.Character.findById(id);
-        const path = `./uploads/${id}/${bodyPart}/`;
+        const path = `./uploads/${id}/`;
         for (const fileName in _req.files) {
             let imageName = _req.files[fileName].name;
             let compressedImageName;
@@ -111,12 +124,14 @@ exports.uploadImages = (0, async_1.asyncWrapper)((_req, _res) => __awaiter(void 
                 case "body":
                     console.log("Body image", _req.files[fileName]);
                     const file = _req.files[fileName];
-                    yield file.mv(path + imageName);
-                    compressedImageName = yield (0, imageUtils_1.convertToWebp)(path, imageName);
+                    yield file.mv(path + "body/" + imageName);
+                    compressedImageName = yield (0, imageUtils_1.convertToWebp)(path + "body/", imageName);
                     console.log(compressedImageName);
                     value = character.data.get(version);
                     value.body = compressedImageName;
                     character.data.set(version, Object.assign({}, value));
+                    console.log("CHARACTER", character.data);
+                    yield character.save();
                     break;
                 case "expressions1":
                 case "expressions2":
@@ -130,16 +145,13 @@ exports.uploadImages = (0, async_1.asyncWrapper)((_req, _res) => __awaiter(void 
                     yield image.mv(path + `${fileName}/` + imageName);
                     compressedImageName = yield (0, imageUtils_1.convertToWebp)(path + `${fileName}/`, imageName);
                     value = character.data.get(version);
-                    console.log("VALUE", value);
                     value.expressions[fileName] = compressedImageName;
-                    console.log("VALUE EXPRESSION", value.expressions);
-                    console.log("CHARACTER DATA", character.data);
                     character.data.set(version, Object.assign({}, value));
+                    yield character.save();
                     break;
             }
         }
-        yield character.save();
-        return _res.status(200).json({ msg: "Images uploaded !" });
+        return _res.status(200).json(character);
     }
     return _res.status(500).json({ msg: `Something went wrong` });
 }));

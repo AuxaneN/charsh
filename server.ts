@@ -16,9 +16,11 @@ const port: number = config.get("port");
 const characterRoutes = require("./routes/characters");
 const userRoutes = require("./routes/user");
 const adminRoutes = require("./routes/admin");
-
+const isAuthenticated = require("./middleware/isAuthenticated");
+const path = require("path");
 const app: Application = express();
 
+global.appRoot = path.resolve(__dirname);
 // import { Document, PassportLocalModel, PassportLocalDocument } from "mongoose";
 // // Middlewares
 
@@ -29,7 +31,6 @@ app.use(
     createParentPath: true,
   })
 );
-app.use(errorHandler);
 app.use(morgan.default("dev"));
 app.use(cors());
 

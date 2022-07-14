@@ -2,7 +2,7 @@ import { Schema } from "mongoose";
 
 //Schema bits
 import { infoSchema } from "./infoSchema";
-import { personnalitySchema } from "./personnalitySchema";
+import { personalitySchema } from "./personalitySchema";
 import { faceSchema } from "./faceSchema";
 import { expressionSchema } from "./expressionSchema";
 // TODO: typescriptise this : Add an interface and assign this interface to the schema
@@ -13,7 +13,7 @@ interface ICharacter {
   infos?: string;
   about?: string;
   //Qualities, flaws
-  personnality?: string;
+  personality?: string;
   //Eyes, nose, mouth, faceshape, ears
   face?: string;
   // Happy, neutral, surprised, sad, scared, fucking horny man > 6 image urls
@@ -36,7 +36,7 @@ export const characterVersionSchema = new Schema<ICharacter>({
     type: String,
   },
   //Qualities, flaws
-  personnality: personnalitySchema,
+  personality: personalitySchema,
   //Eyes, nose, mouth, faceshape, ears
   face: faceSchema,
   // Happy, neutral, surprised, sad, scared, fucking horny man > 6 image urls

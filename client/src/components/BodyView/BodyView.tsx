@@ -1,3 +1,5 @@
+import BodyViewStyle from "./BodyViewStyle";
+
 type Character = {
   _id: string;
   body: string;
@@ -32,10 +34,9 @@ interface IProps {
 
 const BodyView = ({ character }: IProps) => {
   return (
-    <>
-      <h3>{character.infos.name}</h3>
+    <BodyViewStyle>
       <img src={character.body} />
-    </>
+    </BodyViewStyle>
   );
 };
 

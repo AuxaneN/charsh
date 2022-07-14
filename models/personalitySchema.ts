@@ -1,7 +1,7 @@
 import { Schema } from "mongoose";
 
 //Qualities, flaws
-export const personnalitySchema = new Schema({
+export const personalitySchema = new Schema({
   qualities: {
     type: [String],
     validate: {

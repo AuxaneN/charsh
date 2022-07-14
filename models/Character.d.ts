@@ -22,14 +22,11 @@
 /// <reference types="mongoose/types/utility" />
 /// <reference types="mongoose/types/validation" />
 /// <reference types="mongoose/types/inferschematype" />
-import { Schema } from "mongoose";
-interface ICharacter {
-    body?: string;
-    infos?: string;
-    about?: string;
-    personality?: string;
-    face?: string;
-    expressions?: string;
-}
-export declare const characterVersionSchema: Schema<ICharacter, import("mongoose").Model<ICharacter, any, any, any, any>, {}, {}, any, {}, "type", ICharacter>;
-export {};
+import { Schema } from 'mongoose';
+export declare const Character: import("mongoose").Model<{
+    isPublic: boolean;
+    data?: Map<string, import("mongoose").ObtainDocumentType<any, EnforcedDocType, TPathTypeKey>> | undefined;
+}, {}, {}, {}, Schema<any, import("mongoose").Model<any, any, any, any, any>, {}, {}, any, {}, "type", {
+    isPublic: boolean;
+    data?: Map<string, import("mongoose").ObtainDocumentType<any, EnforcedDocType, TPathTypeKey>> | undefined;
+}>>;

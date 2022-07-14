@@ -23,13 +23,7 @@
 /// <reference types="mongoose/types/validation" />
 /// <reference types="mongoose/types/inferschematype" />
 import { Schema } from "mongoose";
-interface ICharacter {
-    body?: string;
-    infos?: string;
-    about?: string;
-    personality?: string;
-    face?: string;
-    expressions?: string;
-}
-export declare const characterVersionSchema: Schema<ICharacter, import("mongoose").Model<ICharacter, any, any, any, any>, {}, {}, any, {}, "type", ICharacter>;
-export {};
+export declare const personalitySchema: Schema<any, import("mongoose").Model<any, any, any, any, any>, {}, {}, any, {}, "type", {
+    qualities: string[];
+    flaws: string[];
+}>;
